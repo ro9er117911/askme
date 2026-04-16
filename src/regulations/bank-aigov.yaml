@@ -1,0 +1,57 @@
+{
+  "profile": "bank-aigov-inherent-risk",
+  "baseline": [
+    {
+      "name": "個人資料保護法",
+      "applies_to": "all_ai_cases",
+      "notes": "所有 AI 案件都必須先確認是否涉及個資與特定目的。"
+    },
+    {
+      "name": "金融機構運用人工智慧技術作業規範",
+      "applies_to": "all_ai_cases",
+      "notes": "所有 AI 案件至少要回答治理、透明度、人控與風險控管。"
+    },
+    {
+      "name": "金融機構資通安全防護基準",
+      "applies_to": "all_system_cases",
+      "notes": "只要有系統整合、權限、日誌或資料流，就屬於基礎必備要求。"
+    },
+    {
+      "name": "金融機構辦理電腦系統資訊安全評估辦法",
+      "applies_to": "all_system_cases",
+      "notes": "所有會落地到資訊系統的案件都要能回答資安評估與控制證據。"
+    }
+  ],
+  "conditional_rules": [
+    {
+      "id": "gai-llm",
+      "when": "model_type 顯示為 GAI、LLM、生成式 AI，或混合型且含生成式能力",
+      "regulations": [
+        "金融機構運用新興科技作業規範"
+      ],
+      "review_flags": [
+        "可能觸發新興科技審議",
+        "需要說明模型效度衡量與失效補償方案"
+      ]
+    },
+    {
+      "id": "external-api",
+      "when": "system_scope、normalized_summary 或現有回答出現 external API、第三方 AI、SaaS、委外處理等訊號",
+      "regulations": [
+        "金融機構作業委託他人處理內部作業制度及程序辦法",
+        "金融機構資通系統與服務供應鏈風險管理規範"
+      ],
+      "review_flags": [
+        "需要說明資料是否出行外、保留條款、事件通知與 fallback"
+      ]
+    }
+  ],
+  "required_risk_fields": [
+    "data_sensitivity",
+    "model_type",
+    "system_scope",
+    "regulatory_touchpoints",
+    "human_review_point",
+    "audit_evidence"
+  ]
+}

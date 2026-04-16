@@ -1,0 +1,113 @@
+{
+  "profile": "bank-aigov-inherent-risk",
+  "categories": [
+    {
+      "id": "business",
+      "label": "Business",
+      "questions": [
+        {
+          "id": "business-goal",
+          "priority": "blocker",
+          "fills": ["business_goal", "reviewer_target"],
+          "prompt": "這次送審前草稿的真正目的，是效率補件、治理對齊，還是要直接替代既有審查流程？"
+        },
+        {
+          "id": "owner-and-sponsor",
+          "priority": "blocker",
+          "fills": ["sponsoring_unit", "project_owner"],
+          "prompt": "誰是提案單位，誰是最後要承擔這份草稿正確性的 owner？"
+        },
+        {
+          "id": "scope-boundary",
+          "priority": "blocker",
+          "fills": ["system_scope"],
+          "prompt": "這次要先收斂哪個系統邊界，不要一次把整個治理流程都包進來？"
+        }
+      ]
+    },
+    {
+      "id": "infosec",
+      "label": "Infosec",
+      "questions": [
+        {
+          "id": "data-sensitivity",
+          "priority": "blocker",
+          "fills": ["data_sensitivity"],
+          "prompt": "這個案件是否涉及個資、交易資料、內部調查資料或其他敏感欄位？"
+        },
+        {
+          "id": "access-control",
+          "priority": "followup",
+          "fills": ["impacted_roles"],
+          "prompt": "哪些角色可以看原始資料、AI 產出與稽核日誌？是否已有最小權限說法？"
+        },
+        {
+          "id": "third-party-ai",
+          "priority": "followup",
+          "fills": ["model_type", "regulatory_touchpoints"],
+          "prompt": "是否有第三方模型或外部 AI 服務參與？若有，資料邊界與 fallback 是什麼？"
+        }
+      ]
+    },
+    {
+      "id": "compliance",
+      "label": "Compliance",
+      "questions": [
+        {
+          "id": "regulatory-touchpoints",
+          "priority": "followup",
+          "fills": ["regulatory_touchpoints"],
+          "prompt": "這份草稿未來是否會進正式送審、金檢、稽核或客戶溝通？適用哪些法規或內規？"
+        },
+        {
+          "id": "human-review-point",
+          "priority": "followup",
+          "fills": ["human_review_point"],
+          "prompt": "哪些判斷必須保留人工簽核或人工裁量，不能由 askme 先代答？"
+        },
+        {
+          "id": "audit-evidence",
+          "priority": "followup",
+          "fills": ["audit_evidence"],
+          "prompt": "如果明天要被要求交證據包，現在有哪些文件或紀錄拿得出來，哪些還只是口頭說法？"
+        }
+      ]
+    },
+    {
+      "id": "architecture",
+      "label": "Architecture",
+      "questions": [
+        {
+          "id": "ai-placement",
+          "priority": "followup",
+          "fills": ["system_scope"],
+          "prompt": "AI 元件在整體流程中是必要主流程，還是可降級的輔助元件？"
+        },
+        {
+          "id": "integration-mode",
+          "priority": "followup",
+          "fills": ["system_scope", "model_type"],
+          "prompt": "資料是用 API、批次排程、資料庫同步，還是人工上傳的方式進出 AI 模組？"
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "label": "Audit",
+      "questions": [
+        {
+          "id": "traceability",
+          "priority": "followup",
+          "fills": ["audit_evidence"],
+          "prompt": "系統是否具備足夠的稽核軌跡，例如操作人員、時間、輸入輸出的對應關聯？"
+        },
+        {
+          "id": "retention",
+          "priority": "followup",
+          "fills": ["audit_evidence", "regulatory_touchpoints"],
+          "prompt": "資料保留期限與刪除機制有沒有明確規則，還是目前只停留在口頭共識？"
+        }
+      ]
+    }
+  ]
+}

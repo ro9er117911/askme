@@ -1,0 +1,157 @@
+{
+  "package": {
+    "name": "askme",
+    "version": "0.2.0",
+    "author": "SDD project",
+    "language": "zh-TW",
+    "category": "governance",
+    "default_profile": "bank-aigov-inherent-risk",
+    "default_mode": "auto"
+  },
+  "routes": {
+    "auto": {
+      "entry_command": "/askme",
+      "confidence_threshold": 0.75,
+      "ordered_nodes": ["intake", "missing", "questions", "impact", "pack"]
+    },
+    "content_order": ["why", "who", "how", "what", "roi", "when", "risk"]
+  },
+  "stop_rules": [
+    "輸入不是去識別化文字",
+    "profile 無法判定",
+    "project_owner、system_scope、data_sensitivity 任一 blocker 缺失且流程即將進入 pack",
+    "使用者要求 PDF、PPTX 或 diagram 匯出"
+  ],
+  "nodes": {
+    "askme": {
+      "skill_name": "askme",
+      "command": "/askme",
+      "description": "銀行送審前的 pre-review conductor。把去識別化的模糊輸入收整成缺失欄位、預期問題、影響範圍與 markdown 補件草稿。只做送審前收斂，不做最終核定。",
+      "short_description": "銀行送審前缺口收斂與問題揭露工具箱",
+      "emoji": "🧭",
+      "runtime_path": "SKILL.md",
+      "codex_path": "dist/codex/askme.md",
+      "vscode_path": "dist/vscode/askme.prompt.md"
+    },
+    "intake": {
+      "skill_name": "askme.intake",
+      "command": "/askme.intake",
+      "description": "把去識別化的模糊需求、郵件摘要、會議筆記收整成初始 case packet。",
+      "short_description": "askme intake node",
+      "emoji": "📥",
+      "runtime_path": "intake/SKILL.md",
+      "codex_path": "dist/codex/askme.intake.md",
+      "vscode_path": "dist/vscode/askme.intake.prompt.md"
+    },
+    "missing": {
+      "skill_name": "askme.missing",
+      "command": "/askme.missing",
+      "description": "依 profile 規則把 case packet 拆成 blocker 與 follow-up，形成缺失欄位清單。",
+      "short_description": "askme missing node",
+      "emoji": "🧩",
+      "runtime_path": "missing/SKILL.md",
+      "codex_path": "dist/codex/askme.missing.md",
+      "vscode_path": "dist/vscode/askme.missing.prompt.md"
+    },
+    "questions": {
+      "skill_name": "askme.questions",
+      "command": "/askme.questions",
+      "description": "依 askme 自有 question bank 逐題揭露 business、infosec、compliance、architecture、audit 問題，並回填 case packet。",
+      "short_description": "askme questions node",
+      "emoji": "❓",
+      "runtime_path": "questions/SKILL.md",
+      "codex_path": "dist/codex/askme.questions.md",
+      "vscode_path": "dist/vscode/askme.questions.prompt.md"
+    },
+    "impact": {
+      "skill_name": "askme.impact",
+      "command": "/askme.impact",
+      "description": "把回答收斂成受影響角色、系統與流程的 impact summary，不做正式風險評級。",
+      "short_description": "askme impact node",
+      "emoji": "🗺️",
+      "runtime_path": "impact/SKILL.md",
+      "codex_path": "dist/codex/askme.impact.md",
+      "vscode_path": "dist/vscode/askme.impact.prompt.md"
+    },
+    "pack": {
+      "skill_name": "askme.pack",
+      "command": "/askme.pack",
+      "description": "把 case packet 組成 markdown 補件包。若 blocker 未清，拒絕打包。",
+      "short_description": "askme pack node",
+      "emoji": "📦",
+      "runtime_path": "pack/SKILL.md",
+      "codex_path": "dist/codex/askme.pack.md",
+      "vscode_path": "dist/vscode/askme.pack.prompt.md"
+    },
+    "why": {
+      "skill_name": "askme.why",
+      "command": "/askme.why",
+      "description": "聚焦專案起源與目標，產出專案總覽與目標條列。",
+      "short_description": "askme why node — 專案背景與目標",
+      "emoji": "🎯",
+      "runtime_path": "why/SKILL.md",
+      "codex_path": "dist/codex/askme.why.md",
+      "vscode_path": "dist/vscode/askme.why.prompt.md"
+    },
+    "who": {
+      "skill_name": "askme.who",
+      "command": "/askme.who",
+      "description": "盤點所有牽涉單位與利害關係人，產出專案成員區塊。",
+      "short_description": "askme who node — 利害關係人與單位",
+      "emoji": "👥",
+      "runtime_path": "who/SKILL.md",
+      "codex_path": "dist/codex/askme.who.md",
+      "vscode_path": "dist/vscode/askme.who.prompt.md"
+    },
+    "how": {
+      "skill_name": "askme.how",
+      "command": "/askme.how",
+      "description": "梳理業務流程轉變，產出應用情境區塊。",
+      "short_description": "askme how node — 業務流程與應用情境",
+      "emoji": "🔄",
+      "runtime_path": "how/SKILL.md",
+      "codex_path": "dist/codex/askme.how.md",
+      "vscode_path": "dist/vscode/askme.how.prompt.md"
+    },
+    "what": {
+      "skill_name": "askme.what",
+      "command": "/askme.what",
+      "description": "界定專案範圍與系統架構，產出系統對照表與架構摘要。",
+      "short_description": "askme what node — 專案範圍與系統架構",
+      "emoji": "📦",
+      "runtime_path": "what/SKILL.md",
+      "codex_path": "dist/codex/askme.what.md",
+      "vscode_path": "dist/vscode/askme.what.prompt.md"
+    },
+    "roi": {
+      "skill_name": "askme.roi",
+      "command": "/askme.roi",
+      "description": "填充專案成本、資源需求與專案效益。",
+      "short_description": "askme roi node — 成本、資源、效益量化",
+      "emoji": "💰",
+      "runtime_path": "roi/SKILL.md",
+      "codex_path": "dist/codex/askme.roi.md",
+      "vscode_path": "dist/vscode/askme.roi.prompt.md"
+    },
+    "when": {
+      "skill_name": "askme.when",
+      "command": "/askme.when",
+      "description": "整理專案時程與里程碑，產出專案時程區塊。",
+      "short_description": "askme when node — 時程與里程碑",
+      "emoji": "📅",
+      "runtime_path": "when/SKILL.md",
+      "codex_path": "dist/codex/askme.when.md",
+      "vscode_path": "dist/vscode/askme.when.prompt.md"
+    },
+    "risk": {
+      "skill_name": "askme.risk",
+      "command": "/askme.risk",
+      "description": "檢視合規、資安與模型治理，產出內規外規、資安風險說明、模型治理檢視三個區塊。",
+      "short_description": "askme risk node — 合規、資安、模型治理",
+      "emoji": "⚖️",
+      "runtime_path": "risk/SKILL.md",
+      "codex_path": "dist/codex/askme.risk.md",
+      "vscode_path": "dist/vscode/askme.risk.prompt.md"
+    }
+  }
+}

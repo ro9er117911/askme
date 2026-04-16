@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0.0",
+  "public_commands": [
+    "/askme",
+    "/askme.intake",
+    "/askme.missing",
+    "/askme.questions",
+    "/askme.impact",
+    "/askme.pack",
+    "/askme.why",
+    "/askme.who",
+    "/askme.how",
+    "/askme.what",
+    "/askme.roi",
+    "/askme.when",
+    "/askme.risk"
+  ],
+  "workflow_statuses": ["DONE", "DONE_WITH_CONCERNS", "BLOCKED", "NEEDS_CONTEXT"],
+  "fallback_rules": [
+    "沒有既有 case_packet 時，先根據目前對話與使用者貼入內容重建最小 packet。",
+    "未知資訊一律填 unknown，不得腦補。",
+    "每個 node 都必須能獨立工作，不假設前一個 node 已執行。",
+    "若現有 packet 與新輸入衝突，以使用者本回合較新的明確描述為準。",
+    "只更新自己負責的欄位，其餘欄位原樣保留。"
+  ],
+  "fields": {
+    "case_id": {"description": "案件唯一識別碼。可用日期加簡短 slug 生成。"},
+    "profile": {"description": "目前唯一支援的 profile，固定為 bank-aigov-inherent-risk。"},
+    "source_inputs": {"description": "原始去識別化輸入清單。"},
+    "normalized_summary": {"description": "把使用者輸入壓成 80-160 字可讀摘要。"},
+    "required_fields": {"description": "required field 的目前狀態映射，未知值填 unknown。"},
+    "missing_blockers": {"description": "阻斷 pack 或後續節點的缺失欄位。"},
+    "followups": {"description": "不阻斷流程，但仍需追問或補件的欄位。"},
+    "expected_questions": {"description": "預期委員會會問的問題清單。"},
+    "answered_questions": {"description": "已回答且已回填 packet 的問題。"},
+    "remaining_questions": {"description": "仍待回答的問題。"},
+    "impact_summary": {"description": "受影響角色、系統、流程的摘要。"},
+    "next_actions": {"description": "下一步建議行動。"},
+    "draft_markdown": {"description": "pack 節點輸出的 markdown 補件包。"},
+    "confidence": {"description": "profile 判定與摘要穩定度，0 到 1。"},
+    "why_summary": {"description": "專案總覽與專案目標。"},
+    "who_summary": {"description": "專案成員、督導、PMO、IT 窗口。"},
+    "how_summary": {"description": "舊流程、新流程與差異說明。"},
+    "what_summary": {"description": "專案範圍、系統對照表、架構摘要。"},
+    "roi_summary": {"description": "成本、人力、資源、效益量化。"},
+    "when_summary": {"description": "時程與里程碑。"},
+    "risk_summary": {"description": "法規、資安、模型治理摘要。"}
+  },
+  "nodes": {
+    "askme": {
+      "reads": ["source_inputs", "required_fields", "missing_blockers", "expected_questions", "impact_summary", "draft_markdown", "confidence"],
+      "writes": ["normalized_summary", "required_fields", "missing_blockers", "expected_questions", "impact_summary", "draft_markdown", "next_actions", "confidence"],
+      "blocked_when": ["輸入不是去識別化文字", "profile 無法判定", "流程即將進入 pack 時 blocker 仍未清"],
+      "needs_context_when": ["confidence 低於 0.75 且無法穩定判定為銀行 AI 治理 / 固有風險案件"],
+      "minimum_outputs": ["route preview", "missing blockers", "expected questions", "impact summary", "draft markdown"]
+    },
+    "intake": {
+      "reads": ["source_inputs", "required_fields", "confidence"],
+      "writes": ["case_id", "profile", "source_inputs", "normalized_summary", "required_fields", "confidence"],
+      "blocked_when": [],
+      "needs_context_when": ["輸入不像銀行 AI 治理 / 固有風險案件"],
+      "minimum_outputs": ["case_id", "profile", "source_inputs", "normalized_summary", "required_fields", "confidence"]
+    },
+    "missing": {
+      "reads": ["required_fields"],
+      "writes": ["missing_blockers", "followups", "next_actions"],
+      "blocked_when": [],
+      "needs_context_when": [],
+      "minimum_outputs": ["missing_blockers", "followups", "next_actions"]
+    },
+    "questions": {
+      "reads": ["required_fields", "missing_blockers", "followups", "expected_questions"],
+      "writes": ["required_fields", "expected_questions", "answered_questions", "remaining_questions", "next_actions"],
+      "blocked_when": [],
+      "needs_context_when": ["使用者拒絕回答 blocker 題且現有資訊不足以回填"],
+      "minimum_outputs": ["expected_questions", "answered_questions", "remaining_questions", "required_fields"]
+    },
+    "impact": {
+      "reads": ["required_fields", "followups", "impact_summary"],
+      "writes": ["impact_summary"],
+      "blocked_when": [],
+      "needs_context_when": ["系統邊界與流程影響都無法識別"],
+      "minimum_outputs": ["impact_summary"]
+    },
+    "pack": {
+      "reads": ["normalized_summary", "missing_blockers", "expected_questions", "impact_summary", "next_actions", "risk_summary", "why_summary", "who_summary", "how_summary", "what_summary", "roi_summary", "when_summary"],
+      "writes": ["draft_markdown", "next_actions"],
+      "blocked_when": ["missing_blockers 非空"],
+      "needs_context_when": [],
+      "minimum_outputs": ["draft_markdown", "next_actions", "disclaimer"]
+    },
+    "why": {
+      "reads": ["required_fields", "why_summary"],
+      "writes": ["why_summary"],
+      "blocked_when": [],
+      "needs_context_when": ["無法判定專案起源與業務目標"],
+      "minimum_outputs": ["why_summary"]
+    },
+    "who": {
+      "reads": ["required_fields", "who_summary"],
+      "writes": ["who_summary"],
+      "blocked_when": [],
+      "needs_context_when": ["無法識別需求單位或專案成員"],
+      "minimum_outputs": ["who_summary"]
+    },
+    "how": {
+      "reads": ["required_fields", "how_summary"],
+      "writes": ["how_summary"],
+      "blocked_when": [],
+      "needs_context_when": ["無法判定業務流程轉變"],
+      "minimum_outputs": ["how_summary"]
+    },
+    "what": {
+      "reads": ["required_fields", "what_summary"],
+      "writes": ["what_summary"],
+      "blocked_when": [],
+      "needs_context_when": ["無法識別牽涉系統或資料流"],
+      "minimum_outputs": ["what_summary"]
+    },
+    "roi": {
+      "reads": ["required_fields", "roi_summary"],
+      "writes": ["roi_summary"],
+      "blocked_when": [],
+      "needs_context_when": ["無法估算成本或效益"],
+      "minimum_outputs": ["roi_summary"]
+    },
+    "when": {
+      "reads": ["required_fields", "when_summary"],
+      "writes": ["when_summary"],
+      "blocked_when": [],
+      "needs_context_when": ["無法識別任何時間點或里程碑"],
+      "minimum_outputs": ["when_summary"]
+    },
+    "risk": {
+      "reads": ["required_fields", "risk_summary"],
+      "writes": ["risk_summary"],
+      "blocked_when": ["data_sensitivity 仍為 unknown 且使用者拒絕回答"],
+      "needs_context_when": [],
+      "minimum_outputs": ["risk_summary"]
+    }
+  }
+}

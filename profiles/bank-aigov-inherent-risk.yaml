@@ -1,0 +1,59 @@
+{
+  "profile": "bank-aigov-inherent-risk",
+  "label": "AI治理 / 固有風險評估",
+  "scope": "banking-pre-review",
+  "description": "用於銀行 AI 治理與固有風險評估類案件的送審前收斂。把零散材料整理成缺失欄位、預期問題、影響範圍與補件草稿，不產出最終核定意見。",
+  "routing_clues": {
+    "include_any": ["ai治理", "固有風險", "治理平台", "風險評估", "新興科技", "送審", "合規", "稽核"],
+    "exclude_any": ["landing page", "marketing", "bugfix", "design polish", "deploy"]
+  },
+  "required_fields": [
+    "project_name",
+    "business_goal",
+    "sponsoring_unit",
+    "project_owner",
+    "system_scope",
+    "data_sensitivity",
+    "model_type",
+    "deployment_stage",
+    "reviewer_target"
+  ],
+  "blocker_fields": ["project_owner", "system_scope", "data_sensitivity"],
+  "followup_fields": [
+    "budget_band",
+    "timeline",
+    "impacted_roles",
+    "impacted_systems",
+    "regulatory_touchpoints",
+    "human_review_point",
+    "audit_evidence"
+  ],
+  "field_guidance": {
+    "project_name": "一句話描述案件名稱，避免寫成模糊口號。",
+    "business_goal": "說明這次送審到底想解什麼問題，而不是列功能。",
+    "sponsoring_unit": "哪個提案單位或需求單位負責發起。",
+    "project_owner": "這份送審前草稿最後由誰確認。",
+    "system_scope": "哪些系統、資料流、角色會被碰到。",
+    "data_sensitivity": "至少分出是否涉及個資、交易、內部敏感資料。",
+    "model_type": "規則式、傳統 ML、生成式 AI、或混合。",
+    "deployment_stage": "規劃、PoC、開發、測試、上線前。",
+    "reviewer_target": "這份草稿主要是給誰先看。"
+  },
+  "impact_axes": {
+    "roles": ["提案單位", "治理組", "秘書組", "資安", "法遵", "稽核"],
+    "systems": ["提案入口", "AI評估模組", "權限與日誌機制", "後續治理文件流程"],
+    "processes": ["送審前補件", "風險問卷", "程序提醒", "稽核追溯"]
+  },
+  "pack": {
+    "title": "AI治理 / 固有風險評估送審前補件包",
+    "disclaimer": "這份輸出只用於送審前收斂與補件，不代表最終治理、資安、法遵或高層核定意見。",
+    "sections": [
+      "case-summary",
+      "missing-checklist",
+      "expected-questions",
+      "impact-summary",
+      "next-actions",
+      "disclaimer"
+    ]
+  }
+}
